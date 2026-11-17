@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>思流 Mindstream · 会主动思考的智能体</title>
+  <meta name="description" content="一个在对话之间继续思考的智能体：常驻思考循环、SQLite 记忆、定期反思、主动开口。">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="sigil" aria-hidden="true"><span class="core"></span></div>
+      <div>
+        <h1>思流 <span>Mindstream</span></h1>
+        <p class="tagline" id="tagline">在对话之间，继续思考。</p>
+      </div>
+    </div>
+
+    <div class="status-cluster">
+      <div id="statusPill" class="pill">
+        <span class="dot"></span>
+        <span id="statusText">连接中</span>
+      </div>
+      <span id="modelChip" class="model-chip">LLM</span>
+    </div>
+
+    <div class="controls">
+      <button id="proactiveBtn" class="toggle on" type="button" title="允许思流在觉得值得时主动发消息">
+        <span class="toggle-knob" aria-hidden="true"></span>主动发言
+      </button>
+      <button id="pauseBtn" class="btn" type="button">暂停思考</button>
+      <button id="tickBtn" class="btn" type="button">立即思考</button>
+      <label class="select-wrap" title="独自思考的间隔">节律
+        <select id="intervalSel" aria-label="思考间隔">
+          <option value="15">15s</option>
+          <option value="30" selected>30s</option>
+          <option value="60">60s</option>
+          <option value="120">120s</option>
+          <option value="300">300s</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="视图切换">
+    <button class="tab" data-panel="thoughts" type="button">思考流</button>
+    <button class="tab active" data-panel="chat" type="button">对话</button>
+    <button class="tab" data-panel="mind" type="button">心智</button>
+  </nav>
+
+  <main class="layout">
+    <section class="panel thoughts-panel" id="panel-thoughts" aria-label="思考流">
+      <div class="panel-head">
+        <h2>思考流</h2>
+        <span class="count" id="thoughtCount">0</span>
+        <button id="filterBtn" class="ghost" type="button" title="切换过滤">全部</button>
+      </div>
+      <div class="thoughts" id="thoughts">
+        <div class="empty">还没有想法。<br>它会在第一个 tick 之后开始思考。</div>
+      </div>
+    </section>
+
+    <section class="panel chat-panel active" id="panel-chat" aria-label="对话">
+      <div class="panel-head">
+        <h2>对话</h2>
+        <span class="hint">它会在想说的时候主动开口</span>
+        <span class="count" id="chatCount"></span>
+      </div>
+      <div class="chat" id="chat"></div>
+      <form class="composer" id="chatForm">
+        <textarea id="chatInput" rows="1" placeholder="和思流说点什么…" title="Enter 发送，Shift+Enter 换行" maxlength="4000"></textarea>
+        <button class="send" id="sendBtn" type="submit" aria-label="发送">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 12l16-8-6 16-2.6-6.4L4 12z"></path>
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <aside class="panel mind-panel" id="panel-mind" aria-label="心智状态">
+      <div class="panel-head">
+        <h2>心智</h2>
+        <span class="count" id="mindState">—</span>
+      </div>
+      <div class="mind-scroll">
+        <section class="mind-block mission-block">
+          <div class="block-label">当前方向</div>
+          <p id="mission">—</p>
+        </section>
+
+        <section class="mind-block focus-block">
+          <div class="block-label">此刻关注</div>
+          <p id="focus">—</p>
+        </section>
+
+        <section class="mind-block">
+          <div class="block-label">自我模型</div>
+          <p id="selfModel" class="self-model">—</p>
+          <div class="chips" id="interests"></div>
+        </section>
+
+        <section class="mind-block">
+          <div class="block-head">
+            <span class="block-label">未解决的问题</span>
+            <span class="count" id="questionCount">0</span>
+          </div>
+          <ol class="questions" id="questions"></ol>
+        </section>
+
+        <section class="mind-block">
+          <div class="block-head">
+            <span class="block-label">记忆</span>
+            <span class="count" id="memoryCount">0</span>
+          </div>
+          <div class="memories" id="memories"></div>
+        </section>
+
+        <section class="mind-block">
+          <div class="block-label">运行</div>
+          <div class="stats" id="stats"></div>
+          <div class="usage" id="usage"></div>
+        </section>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
